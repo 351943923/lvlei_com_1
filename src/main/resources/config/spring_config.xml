@@ -1,0 +1,78 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+    default-lazy-init="false">
+	<!-- 注解支持 -->
+	<context:annotation-config />
+	<!-- 组件扫描com.test目录下的所有文件 -->
+	<context:component-scan base-package="lvlei_com" />
+	<!-- 配置数据源 -->
+	<bean id="jdbcDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+			<!-- 以上和com.mysql.jdbc.Driver一样因为以上也是调用了com.mysql.jdbc.Driver的 -->
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/lvlei_com?useUnicode=true&amp;characterEncoding=UTF-8
+			</value>
+			<!--springmybaitis是我的数据库 -->
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="jdbcDataSource" />
+		<property name="configLocation" value="classpath:config/mybatis_all.xml"></property>
+		<property name="plugins">
+			<array>
+				<!--<bean class="com.lvlei.Intecepter.DataAuthorityHelper">
+					 <property name="properties"> <value> property-key=property-value 
+						</value> </property>
+				</bean> -->
+			</array>
+		</property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<constructor-arg index="1" value="BATCH" />
+	</bean>
+	<!-- <bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.lvlei.Dao.UserDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean> -->
+
+
+<!--<bean id="cronSyncResultQuickToAdapt1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="syncResultQuickToAdaptJob1" />
+		</property>
+		<property name="cronExpression">
+			<value>0/20 * * * * ?</value>
+		</property>
+	</bean>
+	<bean id="syncResultQuickToAdaptJob1"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="goodsOperate" />
+		<property name="targetMethod" value="gogogo" />
+		<property name="concurrent" value="false" />
+	 	<property name="arguments"> 
+			<list>
+			    适配每次JOB处理数量
+				<value type="java.lang.Integer">5</value>
+				<value type="java.lang.String">0604,0201,0202,0203</value>
+			</list>
+		</property>		
+	</bean>-->	
+
+
+
+</beans>
